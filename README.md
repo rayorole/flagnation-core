@@ -13,8 +13,8 @@ Feel free to inspect the code, find bugs, make improvements on the code and make
 We are happy to review them and add them to the official source code.
 
 ## Requirements
-> Note: node v14.x or higher is recommended
->  Note: solc 0.5.0 compiler is used for compiling Solidity smart contracts
+> Note: node v14.x or higher is recommended<br>
+> Note: solc 0.5.0 compiler is used for compiling Solidity smart contracts
  - [ ] nodejs
  - [ ] truffle
  - [ ] openzeppelin solidity library
