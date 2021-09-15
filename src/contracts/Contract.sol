@@ -19,4 +19,21 @@ contract Contract is ERC721Full {
 
         return newItemId;
     }
+
+    function transferFlag(address from, address to, uint256 tokenId /* bytes memory _data */) public {
+        transferFrom(from, to, tokenId);
+    }
+
+    function approveFlag(address to, uint256 tokenId) public {
+        approve(to, tokenId);
+    }
+
+    function burnFlag(uint256 tokenId) public {
+        _burn(tokenId);
+        _tokenIds.decrement();
+    }
+
+    function getMsgSender() public view returns(address) {
+        return msg.sender;
+    }
 }

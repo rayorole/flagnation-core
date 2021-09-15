@@ -36,40 +36,48 @@ contract('Flagnation', (accounts) => {
 
   
 
-  describe('minting', async () => {
+  describe('minting function', async () => {
     it('first mint', async () => {
-      const mint = await contract.createFlag('0xA1f6ffB4146aAD74752B80eeDA9A7620fb5D4940', 'https://ipfs.io')
+      const mint = await contract.createFlag('0x3c0898974de2472ef405882851a89568254e0364', 'https://some.json.document')
       const totalSupply = await contract.totalSupply()
 
       assert.equal(mint.receipt.status, true || 'true')
     })
 
     it('second mint', async () => {
-      const mint = await contract.createFlag('0xA1f6ffB4146aAD74752B80eeDA9A7620fb5D4940', 'https://ipfs.io')
+      const mint = await contract.createFlag('0x3c0898974de2472ef405882851a89568254e0364', 'https://some.json.document')
       const totalSupply = await contract.totalSupply()
 
+      
       assert.equal(mint.receipt.status, true || 'true')
     })
   })
 
-  describe('balanceOf', async () => {
+  describe('burning function', async () => {
+    it('burn first token', async () => {
+      const burn = await contract.burnFlag(1)
+      const totalSupply = await contract.totalSupply()
+
+      assert.equal(totalSupply.toString(), '1')
+    })
+  })
+
+  describe('openzeppelin defaults', async () => {
     it('check balance of adress', async () => {
-      let balance = await contract.balanceOf('0xA1f6ffB4146aAD74752B80eeDA9A7620fb5D4940')
-      assert.equal(balance.toString(), '2')
+      let balance = await contract.balanceOf('0x3c0898974de2472ef405882851a89568254e0364')
+      assert.equal(balance.toString(), '1')
     })
-  })
 
-  describe('ownerOf', async () => {
     it('check owner of token', async () => {
-      let balance = await contract.ownerOf(1)
-      assert.equal(balance.toString(), '0xA1f6ffB4146aAD74752B80eeDA9A7620fb5D4940')
+      await contract.ownerOf(2)
+    })
+
+    it('check uri of token', async () => {
+      let uri = await contract.tokenURI(2)
+      assert.equal(uri, 'https://some.json.document')
     })
   })
 
-  describe('getTokenURI', async () => {
-    it('check uri of token', async () => {
-      let uri = await contract.tokenURI(1)
-      assert.equal(uri, 'https://ipfs.io')
-    })
+  describe('burnFlag function', async () => {
   })
 })
