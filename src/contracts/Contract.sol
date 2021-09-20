@@ -19,7 +19,7 @@ contract Contract is ERC721Full {
 
     function createFlag(address holder, string memory tokenURI) public returns (uint256) {
         require(owner == msg.sender, 'Only owner can mint new flags');
-        require(_tokenIds.current() <= 10000, 'Only a max of 10,000 tokens are allowed');
+        require(_tokenIds.current() < 10000, 'Only a max of 10,000 tokens are allowed');
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();
