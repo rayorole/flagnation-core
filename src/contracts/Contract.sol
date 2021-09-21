@@ -8,7 +8,7 @@ contract Contract is ERC721Full {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    address owner;
+    address private owner;
 
     mapping(uint256 => uint256) public flagPrice;
     mapping(uint256 => bool) public flagForSale;
@@ -29,7 +29,7 @@ contract Contract is ERC721Full {
         return newItemId;
     }
 
-    function transferFlag(address from, address to, uint256 _tokenId /* bytes memory _data */) public {
+    function transferFlag(address from, address to, uint256 _tokenId) public {
         require(msg.sender == ownerOf(_tokenId), 'msg.sender must be flag owner');
         transferFrom(from, to, _tokenId);
     }
@@ -39,13 +39,10 @@ contract Contract is ERC721Full {
         address flagOwner = ownerOf(_tokenId);
 
         require(flagOwner == msg.sender, 'Only owner can sell flag');
+        require(flagOwner != address(0), 'Token must exist');
 
-        // allowance[_tokenId] = address(this);
         flagForSale[_tokenId] = true;
-        // set the sale price etc
         flagPrice[_tokenId] = _tokenPrice;
-
-        emit Approval(flagOwner, address(this), _tokenId);
     }
 
     function buyFlag(uint256 _tokenId) external payable {
@@ -60,17 +57,13 @@ contract Contract is ERC721Full {
         require(isForSale == true, 'Flag must be for sale');
 
         // pay the seller
-        transferFrom(ownerOf(_tokenId), buyer, _tokenId);
+        _transferFrom(ownerOf(_tokenId), buyer, _tokenId);
         // remove token from tokensForSale
         flagForSale[_tokenId] = false;
     }
 
     function getPriceFlag(uint256 _tokenId) public view returns(uint256) {
         return flagPrice[_tokenId];
-    }
-
-    function getMsgSender() public view returns(address) {
-        return msg.sender;
     }
 
     function setOwner(address _newOwner) public returns(bool) {

@@ -70,4 +70,16 @@ contract("Flagnation", (accounts) => {
       assert.equal(uri, "https://some.json.document");
     });
   });
+
+  describe("buy and sell minted flags", async () => {
+    it("set flag for sale", async () => {
+      let res = await contract.setForSale(1, 1000);
+      let owner = await contract.ownerOf(1);
+      assert.equal(owner, "0x7d3Cb8dFFB9E33A98FC6e7e39b0e7d83a4CC6D22");
+    });
+    it("buy flag", async () => {
+      let res = await contract.buyFlag(3);
+      console.log(res);
+    });
+  });
 });
