@@ -1,4 +1,5 @@
 const { assert } = require("chai");
+require("dotenv").config();
 
 const Contract = artifacts.require("./Contract.sol");
 
