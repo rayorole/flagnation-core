@@ -1,17 +1,16 @@
 const Web3 = require("web3");
 const { assert } = require("chai");
-const abi = require("../src/abis/Contract.json").abi;
+const abi = require("../src/abis/Contract.json");
 require("chai").use(require("chai-as-promised")).should();
 
 const web3 = new Web3("http://localhost:7545");
-const contract = new web3.eth.Contract(
-  abi,
-  "0x81066c015fF7F2D14BaBCbEa3BcE4139BA09A1Fb"
-);
 
 let account;
 
 const init = async (contractAddress) => {
+  const id = await web3.eth.net.getId();
+  const contract = new web3.eth.Contract(abi.abi, abi.networks[id].address);
+
   await web3.eth.getAccounts().then((e) => (account = e[0]));
   const bal = await web3.eth.getBalance(account);
 
@@ -69,10 +68,16 @@ const init = async (contractAddress) => {
     );
   }
 
+  async function getPastEvents() {
+    const res = await contract.getPastEvents();
+    console.log(res);
+  }
+
   // await createFlag(account, "FNT");
-  // await getTotalSupply();
+  await getTotalSupply();
   // await setFlagForSale(1, 1000);
-  await ownerOf(1);
+  // await ownerOf(1);
+  // getPastEvents();
   // await buyFlag(1, 1000);
   // await ownerOf(1);
   // await transferFlag(account, "0xA68FeCC8971a9218558ddb798218F79442Dd44cE", 1);

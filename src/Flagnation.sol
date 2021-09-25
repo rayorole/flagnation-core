@@ -13,6 +13,10 @@ contract Contract is ERC721Full {
     mapping(uint256 => uint256) public flagPrice;
     mapping(uint256 => bool) public flagForSale;
 
+    event PunkMinted(uint256 indexed tokenId, address indexed holder);
+    event FlagBought(address indexed seller, address indexed buyer, uint256 indexed _tokenId);
+    event FlagForSale(uint256 indexed _tokenId, uint256 price);
+
     constructor() ERC721Full("Flagnation", "FNT") public {
         owner = msg.sender;
     }
@@ -25,6 +29,7 @@ contract Contract is ERC721Full {
         uint256 newItemId = _tokenIds.current();
         _mint(holder, newItemId);
         _setTokenURI(newItemId, tokenURI);
+        emit PunkMinted(newItemId, holder);
 
         return newItemId;
     }
@@ -43,10 +48,12 @@ contract Contract is ERC721Full {
 
         flagForSale[_tokenId] = true;
         flagPrice[_tokenId] = _tokenPrice;
+        emit FlagForSale(_tokenId, _tokenPrice);
     }
 
     function buyFlag(uint256 _tokenId) external payable {
         address buyer = msg.sender;
+        address seller = ownerOf(_tokenId);
         uint payedPrice = msg.value;
         uint256 salePrice = flagPrice[_tokenId];
         bool isForSale = flagForSale[_tokenId];
@@ -58,9 +65,10 @@ contract Contract is ERC721Full {
         require(isForSale == true, 'Flag must be for sale');
 
         // pay the seller
-        _transferFrom(ownerOf(_tokenId), buyer, _tokenId);
+        _transferFrom(seller, buyer, _tokenId);
         // remove token from tokensForSale
         flagForSale[_tokenId] = false;
+        emit FlagBought(seller, buyer, _tokenId);
     }
 
     function getPriceFlag(uint256 _tokenId) public view returns(uint256) {
